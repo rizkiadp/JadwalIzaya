@@ -212,6 +212,154 @@
             return 'bg-primary/40';
         }
 
+        // --- Core Functions ---
+        function selectDay(day) {
+            selectedDay = day;
+            updateUI();
+        }
+
+        function updateUI() {
+            renderDayPicker();
+            renderSchedules();
+            document.getElementById('selectedDayText').textContent = selectedDay;
+        }
+
+        function renderDayPicker() {
+            const container = document.getElementById('dayPickerContainer');
+            container.innerHTML = '';
+
+            days.forEach(day => {
+                const isSelected = day === selectedDay;
+                const btn = document.createElement('button');
+                btn.onclick = () => selectDay(day);
+
+                // Dynamic Classes
+                const baseClasses = "snap-center flex flex-col items-center justify-center min-w-[64px] rounded-2xl border shrink-0 transition-all active:scale-95 shadow-sm h-12";
+                const activeClasses = "bg-primary text-white border-primary shadow-lg shadow-primary/30 transform scale-105";
+                const inactiveClasses = "bg-white hover:bg-primary/5 dark:bg-zinc-800 text-text-main dark:text-zinc-300 border-primary/5";
+
+                btn.className = `${baseClasses} ${isSelected ? activeClasses : inactiveClasses}`;
+
+                // Add margin to the last item so it doesn't stick to the edge
+                if (day === days[days.length - 1]) {
+                    btn.classList.add('mr-6');
+                }
+
+                btn.innerHTML = `<span class="text-sm font-bold uppercase tracking-wider">${day.substring(0, 3)}</span>`;
+                container.appendChild(btn);
+            });
+
+            // Auto scroll to active day
+            setTimeout(() => {
+                const activeBtn = container.querySelector('.bg-primary');
+                if (activeBtn) {
+                    activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            }, 100);
+        }
+
+        function renderSchedules() {
+            const listContainer = document.getElementById('scheduleList');
+            const countBadge = document.getElementById('classCount');
+
+            // Filter
+            const filteredSchedules = allSchedules.filter(s => s.day && s.day.toLowerCase() === selectedDay.toLowerCase());
+
+            // Sort by time
+            filteredSchedules.sort((a, b) => a.start_time.localeCompare(b.start_time));
+
+            countBadge.textContent = `${filteredSchedules.length} Kelas`;
+            listContainer.innerHTML = '';
+
+            if (filteredSchedules.length === 0) {
+                listContainer.innerHTML = `
+            <div class="flex flex-col items-center justify-center py-10 opacity-50">
+                <span class="material-symbols-outlined text-4xl mb-2 text-zinc-300">event_available</span>
+                <p class="text-sm text-zinc-500">Tidak ada jadwal hari ini.</p>
+            </div>
+        `;
+                return;
+            }
+
+            filteredSchedules.forEach(schedule => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-zinc-800 p-5 rounded-2xl shadow-sm border border-primary/5 flex gap-4 transition-transform active:scale-[0.98]";
+
+                card.innerHTML = `
+        <div class="w-1.5 h-full ${getGradientClass(schedule.type)} rounded-full"></div>
+        <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="font-bold text-base leading-tight dark:text-zinc-100">${schedule.course_name}</h3>
+                <span class="text-[10px] font-bold text-primary border border-primary/20 px-2 py-0.5 rounded uppercase">${schedule.type || 'Umum'}</span>
+            </div>
+            <div class="space-y-2 text-sm text-text-main/70 dark:text-zinc-400">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px] text-primary">schedule</span>
+                    <span>${formatTime(schedule.start_time)} - ${formatTime(schedule.end_time)}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px] text-primary">meeting_room</span>
+                    <span>${schedule.room || '-'}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px] text-primary">person</span>
+                    <span>${schedule.lecturer || '-'}</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col justify-between items-end">
+             <button onclick="event.stopPropagation(); deleteSchedule('${schedule.id}')" class="text-xs text-red-300 hover:text-red-500 p-1">
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+             </button>
+        </div>
+    `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        // --- Delete Modal Logic ---
+        let deleteIdTarget = null;
+
+        function showDeleteModal(id) {
+            deleteIdTarget = id;
+            const modal = document.getElementById('deleteModal');
+            const content = document.getElementById('deleteModalContent');
+
+            modal.classList.remove('hidden');
+            // Reset animation classes
+            content.classList.remove('modal-exit', 'modal-exit-active');
+            content.classList.add('modal-enter');
+
+            // Trigger reflow
+            void content.offsetWidth;
+
+            content.classList.add('modal-enter-active');
+            content.classList.remove('modal-enter');
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            const content = document.getElementById('deleteModalContent');
+
+            content.classList.remove('modal-enter-active');
+            content.classList.add('modal-exit');
+
+            // Trigger reflow
+            void content.offsetWidth;
+
+            content.classList.add('modal-exit-active');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                deleteIdTarget = null;
+            }, 200);
+        }
+
+        // Global function for onclick attribute in HTML
+        window.deleteSchedule = function (id) {
+            showDeleteModal(id);
+        }
+
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('token');
@@ -228,6 +376,47 @@
             const options = { weekday: 'long', day: 'numeric', month: 'long' };
             document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('id-ID', options);
 
+            // Setup Delete Modal Listeners
+            document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+                if (!deleteIdTarget) return;
+
+                const id = deleteIdTarget;
+                const btn = document.getElementById('confirmDeleteBtn');
+                const originalText = btn.textContent;
+
+                btn.textContent = 'Menghapus...';
+                btn.disabled = true;
+
+                try {
+                    const response = await fetch(`${CONFIG.API_BASE_URL}/api/schedules/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        allSchedules = allSchedules.filter(s => s.id !== id);
+                        updateUI();
+                        closeDeleteModal();
+                    } else {
+                        alert('Gagal menghapus');
+                    }
+                } catch (e) {
+                    console.error(e);
+                    alert('Terjadi kesalahan network');
+                } finally {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
+            });
+
+            // Determine initial day
+            const todayIndex = new Date().getDay(); // 0 = Sunday, 1 = Monday
+            const jsDayToName = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const todayName = jsDayToName[todayIndex];
+
+            if (days.includes(todayName)) {
+                selectedDay = todayName;
+            }
+
             // Fetch Data
             try {
                 const response = await fetch(`${CONFIG.API_BASE_URL}/api/schedules?user_id=${user.id}`, {
@@ -238,193 +427,27 @@
 
                 allSchedules = await response.json();
 
-                // Determine today's day to auto-select
-                const todayIndex = new Date().getDay(); // 0 = Sunday, 1 = Monday
-                const jsDayToName = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                const todayName = jsDayToName[todayIndex];
-
-                if (days.includes(todayName)) {
-                    selectedDay = todayName;
-                }
-
+                // Initial Render
                 updateUI();
+
             } catch (error) {
+                console.error("Error fetching schedules:", error);
 
-
-                function selectDay(day) {
-                    selectedDay = day;
-                    updateUI();
-                }
-
-                function updateUI() {
-                    renderDayPicker();
-                    renderSchedules();
-                    document.getElementById('selectedDayText').textContent = selectedDay;
-                }
-
-                function renderDayPicker() {
-                    const container = document.getElementById('dayPickerContainer');
-                    container.innerHTML = '';
-
-                    days.forEach(day => {
-                        const isSelected = day === selectedDay;
-                        const btn = document.createElement('button');
-                        btn.onclick = () => selectDay(day);
-
-                        // Dynamic Classes
-                        const baseClasses = "snap-center flex flex-col items-center justify-center min-w-[64px] rounded-2xl border shrink-0 transition-all active:scale-95 shadow-sm h-12";
-                        const activeClasses = "bg-primary text-white border-primary shadow-lg shadow-primary/30 transform scale-105";
-                        const inactiveClasses = "bg-white hover:bg-primary/5 dark:bg-zinc-800 text-text-main dark:text-zinc-300 border-primary/5";
-
-                        btn.className = `${baseClasses} ${isSelected ? activeClasses : inactiveClasses}`;
-
-                        // Add margin to the last item so it doesn't stick to the edge
-                        if (day === days[days.length - 1]) {
-                            btn.classList.add('mr-6');
-                        }
-
-                        btn.innerHTML = `<span class="text-sm font-bold uppercase tracking-wider">${day.substring(0, 3)}</span>`;
-                        container.appendChild(btn);
-                    });
-
-                    // Auto scroll to active day
-                    setTimeout(() => {
-                        const activeBtn = container.querySelector('.bg-primary');
-                        if (activeBtn) {
-                            activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                        }
-                    }, 100);
-                }
-
-                function renderSchedules() {
-                    const listContainer = document.getElementById('scheduleList');
-                    const countBadge = document.getElementById('classCount');
-
-                    // Filter
-                    const filteredSchedules = allSchedules.filter(s => s.day && s.day.toLowerCase() === selectedDay.toLowerCase());
-
-                    // Sort by time
-                    filteredSchedules.sort((a, b) => a.start_time.localeCompare(b.start_time));
-
-                    countBadge.textContent = `${filteredSchedules.length} Kelas`;
-                    listContainer.innerHTML = '';
-
-                    if (filteredSchedules.length === 0) {
-                        listContainer.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-10 opacity-50">
-                        <span class="material-symbols-outlined text-4xl mb-2 text-zinc-300">event_available</span>
-                        <p class="text-sm text-zinc-500">Tidak ada jadwal hari ini.</p>
+                // Show error state in UI
+                const listContainer = document.getElementById('scheduleList');
+                listContainer.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-10 opacity-70 text-center">
+                        <span class="material-symbols-outlined text-4xl mb-2 text-red-300">error</span>
+                        <p class="text-sm text-red-400 mb-1">Gagal memuat jadwal</p>
+                        <p class="text-xs text-zinc-400">${error.message}</p>
+                        <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-primary text-white text-xs rounded-lg shadow-soft-pink">Coba Lagi</button>
                     </div>
                 `;
-                        return;
-                    }
 
-                    filteredSchedules.forEach(schedule => {
-                        const card = document.createElement('div');
-                        card.className = "bg-white dark:bg-zinc-800 p-5 rounded-2xl shadow-sm border border-primary/5 flex gap-4 transition-transform active:scale-[0.98]";
-
-                        card.innerHTML = `
-                <div class="w-1.5 h-full ${getGradientClass(schedule.type)} rounded-full"></div>
-                <div class="flex-1">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-bold text-base leading-tight dark:text-zinc-100">${schedule.course_name}</h3>
-                        <span class="text-[10px] font-bold text-primary border border-primary/20 px-2 py-0.5 rounded uppercase">${schedule.type || 'Umum'}</span>
-                    </div>
-                    <div class="space-y-2 text-sm text-text-main/70 dark:text-zinc-400">
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px] text-primary">schedule</span>
-                            <span>${formatTime(schedule.start_time)} - ${formatTime(schedule.end_time)}</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px] text-primary">meeting_room</span>
-                            <span>${schedule.room || '-'}</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px] text-primary">person</span>
-                            <span>${schedule.lecturer || '-'}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex flex-col justify-between items-end">
-                     <button onclick="event.stopPropagation(); deleteSchedule('${schedule.id}')" class="text-xs text-red-300 hover:text-red-500 p-1">
-                        <span class="material-symbols-outlined text-[18px]">delete</span>
-                     </button>
-                </div>
-            `;
-                        listContainer.appendChild(card);
-                    });
-                }
-
-                // --- Delete Modal Logic ---
-                let deleteIdTarget = null;
-
-                function showDeleteModal(id) {
-                    deleteIdTarget = id;
-                    const modal = document.getElementById('deleteModal');
-                    const content = document.getElementById('deleteModalContent');
-
-                    modal.classList.remove('hidden');
-                    // Reset animation classes
-                    content.classList.remove('modal-exit', 'modal-exit-active');
-                    content.classList.add('modal-enter');
-
-                    // Trigger reflow
-                    void content.offsetWidth;
-
-                    content.classList.add('modal-enter-active');
-                    content.classList.remove('modal-enter');
-                }
-
-                function closeDeleteModal() {
-                    const modal = document.getElementById('deleteModal');
-                    const content = document.getElementById('deleteModalContent');
-
-                    content.classList.remove('modal-enter-active');
-                    content.classList.add('modal-exit');
-
-                    // Trigger reflow
-                    void content.offsetWidth;
-
-                    content.classList.add('modal-exit-active');
-
-                    setTimeout(() => {
-                        modal.classList.add('hidden');
-                        deleteIdTarget = null;
-                    }, 200);
-                }
-
-                document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
-                    if (!deleteIdTarget) return;
-
-                    const id = deleteIdTarget;
-                    const btn = document.getElementById('confirmDeleteBtn');
-                    const originalText = btn.textContent;
-
-                    btn.textContent = 'Menghapus...';
-                    btn.disabled = true;
-
-                    try {
-                        const response = await fetch(`${CONFIG.API_BASE_URL}/api/schedules/${id}`, { method: 'DELETE' });
-                        if (response.ok) {
-                            allSchedules = allSchedules.filter(s => s.id !== id);
-                            updateUI();
-                            closeDeleteModal();
-                        } else {
-                            alert('Gagal menghapus');
-                        }
-                    } catch (e) {
-                        console.error(e);
-                        alert('Terjadi kesalahan');
-                    } finally {
-                        btn.textContent = originalText;
-                        btn.disabled = false;
-                    }
-                });
-
-                // Update delete function to use modal
-                function deleteSchedule(id) {
-                    showDeleteModal(id);
-                }
+                // Still render day picker so UI isn't completely empty
+                renderDayPicker();
+            }
+        });
     </script>
 </body>
 

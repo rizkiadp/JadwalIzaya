@@ -205,6 +205,16 @@
 
             // Fetch Data
             try {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/schedules?user_id=${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch schedules');
+
+                const schedules = await response.json();
+                renderAllSchedules(schedules);
             } catch (error) {
                 console.error("Error loading schedules:", error);
                 document.getElementById('scheduleList').innerHTML = `

@@ -255,8 +255,13 @@
                 checkNotifications(); // Check immediately
 
             } catch (error) {
-                console.error(error);
-                document.getElementById('scheduleList').innerHTML = '<div class="text-center text-red-400 py-10">Gagal memuat jadwal. Cek koneksi server.</div>';
+                console.error("Fetch error:", error);
+                document.getElementById('scheduleList').innerHTML = `
+                    <div class="text-center text-red-500 py-10">
+                        <p class="font-bold">Gagal memuat jadwal</p>
+                        <p class="text-xs mt-2 text-red-700 bg-red-100 p-2 rounded break-all">${error.message}</p>
+                        <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-primary text-white rounded-lg text-sm">Coba Lagi</button>
+                    </div>`;
             }
         });
 

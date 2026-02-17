@@ -104,11 +104,7 @@
                     <h1 class="text-2xl font-bold text-text-main dark:text-primary-light">Jadwal Kuliah</h1>
                     <p id="currentDateDisplay" class="text-sm text-primary font-medium">Loading date...</p>
                 </div>
-                <button onclick="requestNotificationPermission()"
-                    class="w-10 h-10 rounded-full bg-white dark:bg-zinc-800 flex items-center justify-center shadow-sm border border-primary/10 hover:bg-primary/5 transition-colors"
-                    title="Aktifkan Notifikasi">
-                    <span class="material-symbols-outlined text-primary text-2xl">notifications</span>
-                </button>
+
             </div>
         </header>
 
@@ -252,147 +248,82 @@
                 }
 
                 updateUI();
-
-                // Initialize Notifications
-                setInterval(checkNotifications, 60000); // Check every minute
-                checkNotifications(); // Check immediately
-
             } catch (error) {
-                console.error("Fetch error:", error);
-                document.getElementById('scheduleList').innerHTML = `
-                    <div class="text-center text-red-500 py-10">
-                        <p class="font-bold">Gagal memuat jadwal</p>
-                        <p class="text-xs mt-2 text-red-700 bg-red-100 p-2 rounded break-all">${error.message}</p>
-                        <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-primary text-white rounded-lg text-sm">Coba Lagi</button>
-                    </div>`;
-            }
-        });
 
-        // --- Notifications ---
-        function requestNotificationPermission() {
-            if (!("Notification" in window)) {
-                alert("Browser ini tidak mendukung notifikasi desktop.");
-                return;
-            }
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
-                    new Notification("Notifikasi Diaktifkan", {
-                        body: "Anda akan diingatkan 1 jam sebelum jadwal kuliah.",
-                        icon: "https://cdn-icons-png.flaticon.com/512/2991/2991195.png"
+
+                function selectDay(day) {
+                    selectedDay = day;
+                    updateUI();
+                }
+
+                function updateUI() {
+                    renderDayPicker();
+                    renderSchedules();
+                    document.getElementById('selectedDayText').textContent = selectedDay;
+                }
+
+                function renderDayPicker() {
+                    const container = document.getElementById('dayPickerContainer');
+                    container.innerHTML = '';
+
+                    days.forEach(day => {
+                        const isSelected = day === selectedDay;
+                        const btn = document.createElement('button');
+                        btn.onclick = () => selectDay(day);
+
+                        // Dynamic Classes
+                        const baseClasses = "snap-center flex flex-col items-center justify-center min-w-[64px] rounded-2xl border shrink-0 transition-all active:scale-95 shadow-sm h-12";
+                        const activeClasses = "bg-primary text-white border-primary shadow-lg shadow-primary/30 transform scale-105";
+                        const inactiveClasses = "bg-white hover:bg-primary/5 dark:bg-zinc-800 text-text-main dark:text-zinc-300 border-primary/5";
+
+                        btn.className = `${baseClasses} ${isSelected ? activeClasses : inactiveClasses}`;
+
+                        // Add margin to the last item so it doesn't stick to the edge
+                        if (day === days[days.length - 1]) {
+                            btn.classList.add('mr-6');
+                        }
+
+                        btn.innerHTML = `<span class="text-sm font-bold uppercase tracking-wider">${day.substring(0, 3)}</span>`;
+                        container.appendChild(btn);
                     });
-                }
-            });
-        }
 
-        function checkNotifications() {
-            if (Notification.permission !== "granted") return;
-
-            const now = new Date();
-            const currentDayIndex = now.getDay(); // 0 = Sunday
-            const jsDayToName = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const dayName = jsDayToName[currentDayIndex];
-
-            // Filter for today's schedules
-            const todaySchedules = allSchedules.filter(s => s.day && s.day.toLowerCase() === dayName.toLowerCase());
-
-            todaySchedules.forEach(schedule => {
-                if (!schedule.start_time) return;
-
-                const [hours, minutes] = schedule.start_time.split(':').map(Number);
-                const scheduleDate = new Date();
-                scheduleDate.setHours(hours, minutes, 0, 0);
-
-                const diffMs = scheduleDate - now;
-                const diffMinutes = Math.floor(diffMs / 1000 / 60);
-
-                // Alert if between 55 and 60 minutes before class (safe window)
-                if (diffMinutes >= 55 && diffMinutes <= 60) {
-                    const key = `notified-${schedule.id}-${new Date().toLocaleDateString()}`;
-                    if (!localStorage.getItem(key)) {
-                        new Notification("Pengingat Jadwal Kuliah", {
-                            body: `Mata kuliah ${schedule.course_name} akan dimulai dalam 1 jam (${schedule.start_time}).`,
-                            icon: 'https://cdn-icons-png.flaticon.com/512/2991/2991195.png'
-                        });
-                        localStorage.setItem(key, 'true');
-                    }
-                }
-            });
-        }
-
-        // --- UI Updates ---
-        function selectDay(day) {
-            selectedDay = day;
-            updateUI();
-        }
-
-        function updateUI() {
-            renderDayPicker();
-            renderSchedules();
-            document.getElementById('selectedDayText').textContent = selectedDay;
-        }
-
-        function renderDayPicker() {
-            const container = document.getElementById('dayPickerContainer');
-            container.innerHTML = '';
-
-            days.forEach(day => {
-                const isSelected = day === selectedDay;
-                const btn = document.createElement('button');
-                btn.onclick = () => selectDay(day);
-
-                // Dynamic Classes
-                const baseClasses = "snap-center flex flex-col items-center justify-center min-w-[64px] rounded-2xl border shrink-0 transition-all active:scale-95 shadow-sm h-12";
-                const activeClasses = "bg-primary text-white border-primary shadow-lg shadow-primary/30 transform scale-105";
-                const inactiveClasses = "bg-white hover:bg-primary/5 dark:bg-zinc-800 text-text-main dark:text-zinc-300 border-primary/5";
-
-                btn.className = `${baseClasses} ${isSelected ? activeClasses : inactiveClasses}`;
-
-                // Add margin to the last item so it doesn't stick to the edge
-                if (day === days[days.length - 1]) {
-                    btn.classList.add('mr-6');
+                    // Auto scroll to active day
+                    setTimeout(() => {
+                        const activeBtn = container.querySelector('.bg-primary');
+                        if (activeBtn) {
+                            activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                        }
+                    }, 100);
                 }
 
-                btn.innerHTML = `<span class="text-sm font-bold uppercase tracking-wider">${day.substring(0, 3)}</span>`;
-                container.appendChild(btn);
-            });
+                function renderSchedules() {
+                    const listContainer = document.getElementById('scheduleList');
+                    const countBadge = document.getElementById('classCount');
 
-            // Auto scroll to active day
-            setTimeout(() => {
-                const activeBtn = container.querySelector('.bg-primary');
-                if (activeBtn) {
-                    activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
-            }, 100);
-        }
+                    // Filter
+                    const filteredSchedules = allSchedules.filter(s => s.day && s.day.toLowerCase() === selectedDay.toLowerCase());
 
-        function renderSchedules() {
-            const listContainer = document.getElementById('scheduleList');
-            const countBadge = document.getElementById('classCount');
+                    // Sort by time
+                    filteredSchedules.sort((a, b) => a.start_time.localeCompare(b.start_time));
 
-            // Filter
-            const filteredSchedules = allSchedules.filter(s => s.day && s.day.toLowerCase() === selectedDay.toLowerCase());
+                    countBadge.textContent = `${filteredSchedules.length} Kelas`;
+                    listContainer.innerHTML = '';
 
-            // Sort by time
-            filteredSchedules.sort((a, b) => a.start_time.localeCompare(b.start_time));
-
-            countBadge.textContent = `${filteredSchedules.length} Kelas`;
-            listContainer.innerHTML = '';
-
-            if (filteredSchedules.length === 0) {
-                listContainer.innerHTML = `
+                    if (filteredSchedules.length === 0) {
+                        listContainer.innerHTML = `
                     <div class="flex flex-col items-center justify-center py-10 opacity-50">
                         <span class="material-symbols-outlined text-4xl mb-2 text-zinc-300">event_available</span>
                         <p class="text-sm text-zinc-500">Tidak ada jadwal hari ini.</p>
                     </div>
                 `;
-                return;
-            }
+                        return;
+                    }
 
-            filteredSchedules.forEach(schedule => {
-                const card = document.createElement('div');
-                card.className = "bg-white dark:bg-zinc-800 p-5 rounded-2xl shadow-sm border border-primary/5 flex gap-4 transition-transform active:scale-[0.98]";
+                    filteredSchedules.forEach(schedule => {
+                        const card = document.createElement('div');
+                        card.className = "bg-white dark:bg-zinc-800 p-5 rounded-2xl shadow-sm border border-primary/5 flex gap-4 transition-transform active:scale-[0.98]";
 
-                card.innerHTML = `
+                        card.innerHTML = `
                 <div class="w-1.5 h-full ${getGradientClass(schedule.type)} rounded-full"></div>
                 <div class="flex-1">
                     <div class="flex justify-between items-start mb-2">
@@ -420,80 +351,80 @@
                      </button>
                 </div>
             `;
-                listContainer.appendChild(card);
-            });
-        }
-
-        // --- Delete Modal Logic ---
-        let deleteIdTarget = null;
-
-        function showDeleteModal(id) {
-            deleteIdTarget = id;
-            const modal = document.getElementById('deleteModal');
-            const content = document.getElementById('deleteModalContent');
-
-            modal.classList.remove('hidden');
-            // Reset animation classes
-            content.classList.remove('modal-exit', 'modal-exit-active');
-            content.classList.add('modal-enter');
-
-            // Trigger reflow
-            void content.offsetWidth;
-
-            content.classList.add('modal-enter-active');
-            content.classList.remove('modal-enter');
-        }
-
-        function closeDeleteModal() {
-            const modal = document.getElementById('deleteModal');
-            const content = document.getElementById('deleteModalContent');
-
-            content.classList.remove('modal-enter-active');
-            content.classList.add('modal-exit');
-
-            // Trigger reflow
-            void content.offsetWidth;
-
-            content.classList.add('modal-exit-active');
-
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                deleteIdTarget = null;
-            }, 200);
-        }
-
-        document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
-            if (!deleteIdTarget) return;
-
-            const id = deleteIdTarget;
-            const btn = document.getElementById('confirmDeleteBtn');
-            const originalText = btn.textContent;
-
-            btn.textContent = 'Menghapus...';
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(`${CONFIG.API_BASE_URL}/api/schedules/${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    allSchedules = allSchedules.filter(s => s.id !== id);
-                    updateUI();
-                    closeDeleteModal();
-                } else {
-                    alert('Gagal menghapus');
+                        listContainer.appendChild(card);
+                    });
                 }
-            } catch (e) {
-                console.error(e);
-                alert('Terjadi kesalahan');
-            } finally {
-                btn.textContent = originalText;
-                btn.disabled = false;
-            }
-        });
 
-        // Update delete function to use modal
-        function deleteSchedule(id) {
-            showDeleteModal(id);
-        }
+                // --- Delete Modal Logic ---
+                let deleteIdTarget = null;
+
+                function showDeleteModal(id) {
+                    deleteIdTarget = id;
+                    const modal = document.getElementById('deleteModal');
+                    const content = document.getElementById('deleteModalContent');
+
+                    modal.classList.remove('hidden');
+                    // Reset animation classes
+                    content.classList.remove('modal-exit', 'modal-exit-active');
+                    content.classList.add('modal-enter');
+
+                    // Trigger reflow
+                    void content.offsetWidth;
+
+                    content.classList.add('modal-enter-active');
+                    content.classList.remove('modal-enter');
+                }
+
+                function closeDeleteModal() {
+                    const modal = document.getElementById('deleteModal');
+                    const content = document.getElementById('deleteModalContent');
+
+                    content.classList.remove('modal-enter-active');
+                    content.classList.add('modal-exit');
+
+                    // Trigger reflow
+                    void content.offsetWidth;
+
+                    content.classList.add('modal-exit-active');
+
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                        deleteIdTarget = null;
+                    }, 200);
+                }
+
+                document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+                    if (!deleteIdTarget) return;
+
+                    const id = deleteIdTarget;
+                    const btn = document.getElementById('confirmDeleteBtn');
+                    const originalText = btn.textContent;
+
+                    btn.textContent = 'Menghapus...';
+                    btn.disabled = true;
+
+                    try {
+                        const response = await fetch(`${CONFIG.API_BASE_URL}/api/schedules/${id}`, { method: 'DELETE' });
+                        if (response.ok) {
+                            allSchedules = allSchedules.filter(s => s.id !== id);
+                            updateUI();
+                            closeDeleteModal();
+                        } else {
+                            alert('Gagal menghapus');
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        alert('Terjadi kesalahan');
+                    } finally {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }
+                });
+
+                // Update delete function to use modal
+                function deleteSchedule(id) {
+                    showDeleteModal(id);
+                }
     </script>
 </body>
 

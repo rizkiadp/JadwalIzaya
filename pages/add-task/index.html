@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Tambah Tugas - University App</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f490b1",
+                        "background-light": "#fdf8f9",
+                        "background-dark": "#211116",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.25rem", // Close to 20px
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .custom-shadow {
+            box-shadow: 0 4px 15px rgba(244, 144, 177, 0.12);
+        }
+
+        /* Custom scrollbar for better aesthetic */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #f490b1;
+            border-radius: 10px;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-display">
+    <!-- Main Container (Mobile View Mockup) -->
+    <div class="max-w-md mx-auto min-h-screen bg-background-light dark:bg-background-dark flex flex-col relative pb-24">
+        <!-- Header Section -->
+        <div
+            class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-6 py-4 flex items-center justify-between border-b border-primary/10">
+            <button
+                class="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 custom-shadow">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <h1 class="text-lg font-bold text-zinc-800 dark:text-zinc-100">Tambah Tugas</h1>
+            <div class="w-10"></div> <!-- Spacer for centering -->
+        </div>
+        <!-- Form Content -->
+        <div class="px-6 py-8 flex flex-col gap-6">
+            <!-- Nama Tugas -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-zinc-600 dark:text-zinc-400 px-1">Nama Tugas</label>
+                <div class="relative group">
+                    <input id="taskTitle"
+                        class="w-full h-14 pl-4 pr-12 bg-white dark:bg-zinc-800 border-2 border-primary/5 focus:border-primary focus:ring-0 rounded-xl text-zinc-800 dark:text-zinc-100 transition-all placeholder:text-zinc-400 custom-shadow"
+                        placeholder="Contoh: Laporan Praktikum Kimia" type="text" />
+                    <span
+                        class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within:text-primary">edit</span>
+                </div>
+            </div>
+            <!-- Pilih Mata Kuliah -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-zinc-600 dark:text-zinc-400 px-1">Pilih Mata Kuliah</label>
+                <div class="relative group">
+                    <select id="courseSelect"
+                        class="w-full h-14 pl-4 pr-12 bg-white dark:bg-zinc-800 border-2 border-primary/5 focus:border-primary focus:ring-0 rounded-xl text-zinc-800 dark:text-zinc-100 transition-all appearance-none custom-shadow">
+                        <option disabled="" selected="" value="">Memuat mata kuliah...</option>
+                    </select>
+                    <span
+                        class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none">expand_more</span>
+                </div>
+            </div>
+            <!-- Deadline Date -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-zinc-600 dark:text-zinc-400 px-1">Deadline Date</label>
+                <div class="relative group">
+                    <input id="taskDate"
+                        class="w-full h-14 pl-4 pr-12 bg-white dark:bg-zinc-800 border-2 border-primary/5 focus:border-primary focus:ring-0 rounded-xl text-zinc-800 dark:text-zinc-100 transition-all custom-shadow"
+                        placeholder="Pilih tanggal &amp; waktu" type="date" />
+                    <span
+                        class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within:text-primary">calendar_today</span>
+                </div>
+            </div>
+            <!-- Priority Selection -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-zinc-600 dark:text-zinc-400 px-1">Priority</label>
+                <div class="flex items-center gap-3" id="priorityContainer">
+                    <button type="button" data-priority="High"
+                        class="flex-1 py-3 rounded-xl border-2 border-primary/5 bg-white dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 font-medium text-sm transition-all hover:border-primary/20">
+                        High
+                    </button>
+                    <button type="button" data-priority="Medium"
+                        class="flex-1 py-3 rounded-xl border-2 border-primary bg-primary/10 text-primary font-bold text-sm transition-all hover:bg-primary/20">
+                        Medium
+                    </button>
+                    <button type="button" data-priority="Low"
+                        class="flex-1 py-3 rounded-xl border-2 border-primary/5 bg-white dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 font-medium text-sm transition-all hover:border-primary/20">
+                        Low
+                    </button>
+                </div>
+            </div>
+            <!-- Notes / Catatan -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-zinc-600 dark:text-zinc-400 px-1">Catatan</label>
+                <div class="relative">
+                    <textarea id="taskNotes"
+                        class="w-full p-4 bg-white dark:bg-zinc-800 border-2 border-primary/5 focus:border-primary focus:ring-0 rounded-xl text-zinc-800 dark:text-zinc-100 transition-all placeholder:text-zinc-400 custom-shadow resize-none"
+                        placeholder="Tulis detail atau instruksi tambahan..." rows="4"></textarea>
+                </div>
+            </div>
+            <!-- Aesthetic Illustration/Decoration (Optional) -->
+            <div class="mt-4 flex justify-center">
+                <div class="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-4xl text-primary">auto_awesome</span>
+                </div>
+            </div>
+        </div>
+        <!-- Sticky Bottom Save Button Container -->
+        <div
+            class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-6 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light/95 dark:via-background-dark/95 to-transparent">
+            <button id="saveTaskBtn"
+                class="w-full py-4 bg-primary hover:bg-primary/90 text-white font-bold text-lg rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">save</span>
+                Simpan Tugas
+            </button>
+        </div>
+    </div>
+    <!-- Background Decoration -->
+    <div
+        class="fixed top-20 -left-10 w-40 h-40 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob">
+    </div>
+    <div
+        class="fixed top-20 -right-10 w-40 h-40 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000">
+    </div>
+    <div
+        class="fixed -bottom-8 left-20 w-40 h-40 bg-yellow-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000">
+    </div>
+
+    <script src="../../config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+
+            if (!token || !userStr) {
+                window.location.href = '../../pages/login/index.html';
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+
+            // Back button
+            document.querySelector('.material-symbols-outlined').parentElement.onclick = () => {
+                window.location.href = '../../pages/todo/index.html';
+            };
+
+            // Priority selection
+            let selectedPriority = 'Medium';
+            const buttons = document.querySelectorAll('#priorityContainer button');
+
+            // Helper to set visual state
+            function setPriorityVisuals(priority) {
+                buttons.forEach(btn => {
+                    const btnPriority = btn.getAttribute('data-priority');
+                    if (btnPriority === priority) {
+                        btn.className = "flex-1 py-3 rounded-xl border-2 border-primary bg-primary/10 text-primary font-bold text-sm transition-all hover:bg-primary/20";
+                    } else {
+                        btn.className = "flex-1 py-3 rounded-xl border-2 border-primary/5 bg-white dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 font-medium text-sm transition-all hover:border-primary/20";
+                    }
+                });
+            }
+
+            // Init state
+            setPriorityVisuals(selectedPriority);
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    selectedPriority = btn.getAttribute('data-priority');
+                    setPriorityVisuals(selectedPriority);
+                });
+            });
+
+            // Populate Courses
+            const courseSelect = document.getElementById('courseSelect');
+            try {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/schedules?user_id=${user.id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const schedules = await response.json();
+                    const courses = [...new Set(schedules.map(s => s.course_name).filter(Boolean))];
+
+                    courseSelect.innerHTML = '<option disabled selected value="">Pilih mata kuliah anda</option>';
+
+                    if (courses.length === 0) {
+                        const option = document.createElement('option');
+                        option.value = "Umum";
+                        option.text = "Umum (Tidak ada jadwal)";
+                        courseSelect.appendChild(option);
+                    } else {
+                        courses.sort().forEach(courseName => {
+                            const option = document.createElement('option');
+                            option.value = courseName;
+                            option.text = courseName;
+                            courseSelect.appendChild(option);
+                        });
+                        // Add 'Umum' option always
+                        const generalOption = document.createElement('option');
+                        generalOption.value = "Umum";
+                        generalOption.text = "Umum / Lainnya";
+                        courseSelect.appendChild(generalOption);
+                    }
+                } else {
+                    courseSelect.innerHTML = '<option disabled selected value="">Gagal memuat mata kuliah</option>';
+                }
+            } catch (e) {
+                console.error(e);
+                courseSelect.innerHTML = '<option disabled selected value="">Error memuat data</option>';
+            }
+
+            // Save Task
+            document.getElementById('saveTaskBtn').addEventListener('click', async () => {
+                const title = document.getElementById('taskTitle').value;
+                const course = courseSelect.value;
+                const date = document.getElementById('taskDate').value;
+                const notes = document.getElementById('taskNotes').value;
+
+                if (!title) {
+                    alert('Judul tugas harus diisi');
+                    return;
+                }
+
+                if (!course) {
+                    alert('Silakan pilih mata kuliah');
+                    return;
+                }
+
+                const data = {
+                    user_id: user.id,
+                    title,
+                    course,
+                    date,
+                    priority: selectedPriority,
+                    notes,
+                    completed: false
+                };
+
+                try {
+                    const response = await fetch(`${CONFIG.API_BASE_URL}/api/tasks`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        // Success animation or redirect?
+                        window.location.href = '../../pages/todo/index.html';
+                    } else {
+                        alert('Gagal menyimpan tugas');
+                    }
+                } catch (e) {
+                    console.error(e);
+                    alert('Gagal terhubung ke server');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

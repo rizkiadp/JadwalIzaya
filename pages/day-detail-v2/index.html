@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Semua Jadwal - University Planner</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f490b1",
+                        "primary-light": "#ffb7ce",
+                        "background-light": "#fff5f8",
+                        "background-dark": "#211116",
+                        "text-main": "#4a3a3f",
+                        "card-bg": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.25rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft-pink': '0 10px 25px -5px rgba(244, 144, 177, 0.15), 0 8px 10px -6px rgba(244, 144, 177, 0.1)',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: max(884px, 100dvh);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Modal Animation */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-text-main">
+    <!-- Main Container -->
+    <div class="max-w-md mx-auto flex flex-col min-h-screen relative pb-28">
+        <!-- Header -->
+        <header
+            class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button onclick="window.location.href='../../pages/home/index.html'"
+                    class="size-10 flex items-center justify-center rounded-xl bg-white dark:bg-zinc-800 shadow-sm border border-primary/10 active:scale-95 transition-transform">
+                    <span class="material-symbols-outlined text-primary">arrow_back_ios_new</span>
+                </button>
+                <h1 id="pageTitle" class="text-xl font-bold tracking-tight text-[#2d1b22] dark:text-pink-100">Semua
+                    Jadwal</h1>
+            </div>
+            <button
+                class="size-10 flex items-center justify-center rounded-xl bg-white dark:bg-zinc-800 shadow-sm border border-primary/10">
+                <span class="material-symbols-outlined text-primary">calendar_month</span>
+            </button>
+        </header>
+
+        <!-- Course List Content -->
+        <main id="scheduleList" class="px-6 space-y-8 mt-2 flex-1">
+            <!-- Loading State -->
+            <div class="text-center py-10 opacity-60">
+                <span class="material-symbols-outlined text-4xl animate-spin text-primary">progress_activity</span>
+                <p class="mt-2 text-sm">Memuat jadwal...</p>
+            </div>
+        </main>
+
+        <!-- Floating Action Button for Add -->
+        <button onclick="window.location.href='../../pages/add-schedule/index.html'"
+            class="fixed right-6 bottom-24 w-14 h-14 rounded-full bg-gradient-to-tr from-primary to-primary-light text-white shadow-lg shadow-primary/30 flex items-center justify-center z-30 transition-transform hover:scale-110 active:scale-95">
+            <span class="material-symbols-outlined text-3xl">add</span>
+        </button>
+
+        <!-- Bottom Navigation Bar -->
+        <nav
+            class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-t border-primary/10 px-6 py-3 flex items-center justify-around z-40 rounded-t-2xl">
+            <a class="flex flex-col items-center gap-1 group relative" href="../../pages/home/index.html">
+                <span
+                    class="material-symbols-outlined text-text-main/40 dark:text-zinc-500 group-hover:text-primary transition-colors">home</span>
+                <span
+                    class="text-[10px] font-bold text-text-main/40 dark:text-zinc-500 uppercase tracking-tighter group-hover:text-primary transition-colors">Beranda</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 group relative" href="#">
+                <div class="w-10 h-1 rounded-full bg-primary absolute -top-3 block"></div>
+                <span class="material-symbols-outlined text-primary"
+                    style="font-variation-settings: 'FILL' 1">calendar_today</span>
+                <span class="text-[10px] font-bold text-primary uppercase tracking-tighter">Jadwal</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 group" href="../../pages/todo/index.html">
+                <span
+                    class="material-symbols-outlined text-text-main/40 dark:text-zinc-500 group-hover:text-primary transition-colors">checklist</span>
+                <span
+                    class="text-[10px] font-bold text-text-main/40 dark:text-zinc-500 uppercase tracking-tighter group-hover:text-primary transition-colors">Tugas</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 group" href="../../pages/profile/index.html">
+                <span
+                    class="material-symbols-outlined text-text-main/40 dark:text-zinc-500 group-hover:text-primary transition-colors">person</span>
+                <span
+                    class="text-[10px] font-bold text-text-main/40 dark:text-zinc-500 uppercase tracking-tighter group-hover:text-primary transition-colors">Profil</span>
+            </a>
+        </nav>
+
+        <!-- Cute Delete Modal -->
+        <div id="deleteModal"
+            class="hidden absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm">
+            <div class="bg-white dark:bg-zinc-800 w-full max-w-sm rounded-3xl p-6 shadow-soft-pink border-2 border-primary/20 flex flex-col items-center text-center transform transition-all"
+                id="deleteModalContent">
+                <div class="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center mb-4 animate-bounce">
+                    <span class="material-symbols-outlined text-4xl text-red-400">delete_forever</span>
+                </div>
+                <h3 class="text-xl font-bold text-text-main dark:text-zinc-100 mb-2">Hapus Jadwal?</h3>
+                <p class="text-text-main/60 dark:text-zinc-400 text-sm mb-6">Yakin mau hapus jadwal ini? Nanti gabisa
+                    dibalikin lho...</p>
+
+                <div class="flex gap-3 w-full">
+                    <button onclick="closeDeleteModal()"
+                        class="flex-1 py-3 rounded-xl font-bold text-text-main/60 bg-gray-100 hover:bg-gray-200 transition-colors">
+                        Gajadi
+                    </button>
+                    <button id="confirmDeleteBtn"
+                        class="flex-1 py-3 rounded-xl font-bold text-white bg-primary hover:bg-primary-light shadow-lg shadow-primary/30 transition-all active:scale-95">
+                        Iya, Hapus!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Utils ---
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function formatTime(timeString) {
+            return timeString ? timeString.substring(0, 5) : '--:--';
+        }
+
+        function getIconForCourse(courseName) {
+            const name = courseName.toLowerCase();
+            if (name.includes('math') || name.includes('kalkulus') || name.includes('stat')) return 'functions';
+            if (name.includes('algo') || name.includes('program') || name.includes('code')) return 'terminal';
+            if (name.includes('data') || name.includes('base')) return 'database';
+            if (name.includes('inggris') || name.includes('english')) return 'translate';
+            if (name.includes('jaringan') || name.includes('network')) return 'lan';
+            if (name.includes('web') || name.includes('design')) return 'html';
+            return 'book_2'; // Default
+        }
+
+        // --- Main Logic ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+
+            // Auth Check
+            if (!token || !userStr) {
+                window.location.href = '../../pages/login/index.html';
+                return;
+            }
+            const user = JSON.parse(userStr);
+
+            // Fetch Data
+            try {
+            } catch (error) {
+                console.error("Error loading schedules:", error);
+                document.getElementById('scheduleList').innerHTML = `
+                    <div class="text-center py-10">
+                        <span class="material-symbols-outlined text-4xl text-gray-300">error</span>
+                        <p class="mt-2 text-gray-500">Gagal memuat jadwal.</p>
+                        <button onclick="window.location.reload()" class="mt-4 px-4 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium">Coba Lagi</button>
+                    </div>
+                `;
+            }
+        });
+
+        function renderAllSchedules(allSchedules) {
+            const container = document.getElementById('scheduleList');
+            container.innerHTML = '';
+
+            const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+            let hasAnySchedule = false;
+
+            days.forEach(day => {
+                // Filter schedules for the current day
+                const daySchedules = allSchedules.filter(s => s.day && s.day.toLowerCase() === day.toLowerCase());
+
+                if (daySchedules.length > 0) {
+                    hasAnySchedule = true;
+
+                    // Sort by time
+                    daySchedules.sort((a, b) => a.start_time.localeCompare(b.start_time));
+
+                    // Create Day Section
+                    const daySection = document.createElement('div');
+                    daySection.className = "space-y-3";
+
+                    // Day Header
+                    daySection.innerHTML = `
+                        <div class="flex items-center gap-3 mb-2">
+                             <h2 class="text-lg font-bold text-primary">${day}</h2>
+                             <div class="h-px bg-primary/20 flex-1"></div>
+                        </div>
+                        <div class="grid gap-3" id="list-${day}"></div>
+                    `;
+
+                    container.appendChild(daySection);
+
+                    const listContainer = daySection.querySelector(`#list-${day}`);
+
+                    // Render Cards
+                    daySchedules.forEach(schedule => {
+                        const icon = getIconForCourse(schedule.course_name);
+                        const card = document.createElement('div');
+                        card.className = "bg-white dark:bg-zinc-900 rounded-xl p-4 shadow-sm border border-primary/5 flex flex-col gap-3 relative overflow-hidden group transition-all hover:shadow-md";
+
+                        card.innerHTML = `
+                            <div class="flex justify-between items-start z-10">
+                                <h3 class="font-bold text-[#2d1b22] dark:text-white leading-tight">${schedule.course_name}</h3>
+                                <button onclick="deleteSchedule('${schedule.id}')" class="text-red-300 hover:text-red-500 transition-colors">
+                                     <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </button>
+                            </div>
+                            
+                            <div class="z-10 space-y-1">
+                                <div class="flex items-center gap-2 text-xs text-[#7a5c68] dark:text-zinc-400">
+                                    <span class="material-symbols-outlined text-[14px] text-primary">schedule</span>
+                                    <span class="font-bold text-primary">${formatTime(schedule.start_time)} - ${formatTime(schedule.end_time)}</span>
+                                     <span class="mx-1">•</span>
+                                    <span class="material-symbols-outlined text-[14px]">apartment</span>
+                                    <span>${schedule.room || 'TBA'}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-xs text-[#7a5c68] dark:text-zinc-400">
+                                     <span class="material-symbols-outlined text-[14px]">school</span>
+                                     <span>${schedule.lecturer || 'Dosen'}</span>
+                                </div>
+                            </div>
+                        `;
+                        listContainer.appendChild(card);
+                    });
+                }
+            });
+
+            if (!hasAnySchedule) {
+                container.innerHTML = `
+                    <div class="fixed top-20 -left-10 w-40 h-40 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+    <div class="fixed top-20 -right-10 w-40 h-40 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+    <div class="fixed -bottom-8 left-20 w-40 h-40 bg-yellow-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+
+    <div class="flex flex-col items-center justify-center py-20 text-center opacity-60">
+                        <div class="w-20 h-20 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-4">
+                            <span class="material-symbols-outlined text-4xl text-gray-400">event_busy</span>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800 dark:text-white">Belum ada jadwal</h3>
+                        <p class="text-sm text-gray-500 max-w-[200px]">Jadwal kamu masih kosong. Tambahkan jadwal baru sekarang!</p>
+                    </div>
+                `;
+            }
+
+            // Auto-scroll to specific day if query param exists (Optional enhancement)
+            const targetDay = getQueryParam('day');
+            if (targetDay) {
+                // Simple timeout to allow rendering
+                setTimeout(() => {
+                    // Find the header with typical text contains
+                    const headers = document.querySelectorAll('h2');
+                    for (let h of headers) {
+                        if (h.textContent.trim() === targetDay) {
+                            h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            break;
+                        }
+                    }
+                }, 300);
+            }
+        }
+
+        // --- Delete Modal Logic for Day Detail ---
+        let deleteIdTarget = null;
+
+        function showDeleteModal(id) {
+            deleteIdTarget = id;
+            const modal = document.getElementById('deleteModal');
+            const content = document.getElementById('deleteModalContent');
+
+            modal.classList.remove('hidden');
+            content.classList.remove('modal-exit', 'modal-exit-active');
+            content.classList.add('modal-enter');
+            void content.offsetWidth;
+            content.classList.add('modal-enter-active');
+            content.classList.remove('modal-enter');
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            const content = document.getElementById('deleteModalContent');
+
+            content.classList.remove('modal-enter-active');
+            content.classList.add('modal-exit');
+            void content.offsetWidth;
+            content.classList.add('modal-exit-active');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                deleteIdTarget = null;
+            }, 200);
+        }
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+            if (!deleteIdTarget) return;
+            const id = deleteIdTarget;
+            const btn = document.getElementById('confirmDeleteBtn');
+            const originalText = btn.textContent;
+
+            btn.textContent = 'Menghapus...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/schedules/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    window.location.reload();
+                    closeDeleteModal();
+                } else {
+                    alert('Gagal menghapus schedule');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Terjadi kesalahan');
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        async function deleteSchedule(id) {
+            showDeleteModal(id);
+        }
+    </script>
+</body>
+
+</html>

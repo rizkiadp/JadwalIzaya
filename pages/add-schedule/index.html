@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f490b1",
+                        "background-light": "#fef8fa",
+                        "background-dark": "#211116",
+                        "neutral-pink": "#994d66",
+                        "border-pink": "#fce7ee",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .custom-shadow {
+            box-shadow: 0 4px 20px -2px rgba(244, 144, 177, 0.15);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-[#1b0e12] font-display">
+    <!-- Top App Bar -->
+    <div
+        class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+        <button onclick="window.location.href='../../pages/home/index.html'"
+            class="flex items-center justify-center size-10 rounded-full hover:bg-primary/10 transition-colors">
+            <span class="material-symbols-outlined text-[#1b0e12] dark:text-white">arrow_back</span>
+        </button>
+        <h1 class="text-lg font-bold tracking-tight text-[#1b0e12] dark:text-white">Tambah Jadwal</h1>
+        <div class="size-10"></div> <!-- Spacer for centering -->
+    </div>
+    <main class="max-w-md mx-auto px-4 pb-32">
+        <div class="mt-4 space-y-6">
+            <!-- Course Name Input -->
+            <div class="space-y-2">
+                <label class="text-sm font-semibold text-neutral-pink px-1">Nama Mata Kuliah<!--"label-->
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary">book</span>
+                        <input
+                            class="w-full pl-12 pr-4 h-14 bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 rounded-xl focus:border-primary focus:ring-0 transition-all custom-shadow placeholder:text-neutral-pink/40"
+                            placeholder="Contoh: Pemrograman Web" type="text" />
+                    </div>
+                </label>
+            </div>
+            <!-- Room Input -->
+            <div class="space-y-2">
+                <label class="text-sm font-semibold text-neutral-pink px-1">Ruangan</label>
+                <div class="relative">
+                    <span
+                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary">meeting_room</span>
+                    <input
+                        class="w-full pl-12 pr-4 h-14 bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 rounded-xl focus:border-primary focus:ring-0 transition-all custom-shadow placeholder:text-neutral-pink/40"
+                        placeholder="Contoh: Lab Komputer 1" type="text" />
+                </div>
+            </div>
+            <!-- Lecturer Input -->
+            <div class="space-y-2">
+                <label class="text-sm font-semibold text-neutral-pink px-1">Dosen Pengampu</label>
+                <div class="relative">
+                    <span
+                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary">person</span>
+                    <input
+                        class="w-full pl-12 pr-4 h-14 bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 rounded-xl focus:border-primary focus:ring-0 transition-all custom-shadow placeholder:text-neutral-pink/40"
+                        placeholder="Nama dosen pengampu" type="text" />
+                </div>
+            </div>
+            <!-- Day Selector -->
+            <div class="space-y-3">
+                <label class="text-sm font-semibold text-neutral-pink px-1">Pilih Hari</label>
+                <div class="flex flex-wrap gap-2">
+                    <button
+                        class="px-5 py-2.5 rounded-full bg-primary text-white font-medium text-sm transition-all shadow-md shadow-primary/20">Senin</button>
+                    <button
+                        class="px-5 py-2.5 rounded-full bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 text-neutral-pink font-medium text-sm hover:border-primary/50 transition-all">Selasa</button>
+                    <button
+                        class="px-5 py-2.5 rounded-full bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 text-neutral-pink font-medium text-sm hover:border-primary/50 transition-all">Rabu</button>
+                    <button
+                        class="px-5 py-2.5 rounded-full bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 text-neutral-pink font-medium text-sm hover:border-primary/50 transition-all">Kamis</button>
+                    <button
+                        class="px-5 py-2.5 rounded-full bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 text-neutral-pink font-medium text-sm hover:border-primary/50 transition-all">Jumat</button>
+                    <button
+                        class="px-5 py-2.5 rounded-full bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 text-neutral-pink font-medium text-sm hover:border-primary/50 transition-all">Sabtu</button>
+                </div>
+            </div>
+            <!-- Time Inputs -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-neutral-pink px-1">Jam Mulai</label>
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary text-xl">schedule</span>
+                        <input
+                            class="w-full pl-11 pr-4 h-14 bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 rounded-xl focus:border-primary focus:ring-0 transition-all custom-shadow"
+                            type="time" value="08:00" />
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-neutral-pink px-1">Jam Selesai</label>
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary text-xl">timer_off</span>
+                        <input
+                            class="w-full pl-11 pr-4 h-14 bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 rounded-xl focus:border-primary focus:ring-0 transition-all custom-shadow"
+                            type="time" value="10:30" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Action Button at Bottom -->
+    <div
+        class="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent">
+        <button id="saveBtn"
+            class="w-full max-w-md mx-auto h-16 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 transition-transform active:scale-95">
+            <span class="material-symbols-outlined">save</span>
+            <span>Simpan Jadwal</span>
+        </button>
+    </div>
+
+    <script src="../../config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '../../pages/login/index.html';
+            }
+
+            // Add IDs to inputs if they don't have them
+            const inputs = document.querySelectorAll('input');
+            if (!inputs[0].id) inputs[0].id = 'courseName';
+            if (!inputs[1].id) inputs[1].id = 'room';
+            if (!inputs[2].id) inputs[2].id = 'lecturer';
+
+            // Time inputs
+            const timeInputs = document.querySelectorAll('input[type="time"]');
+            if (timeInputs[0] && !timeInputs[0].id) timeInputs[0].id = 'startTime';
+            if (timeInputs[1] && !timeInputs[1].id) timeInputs[1].id = 'endTime';
+
+            // Day selection logic
+            let selectedDay = 'Senin';
+            const dayButtons = document.querySelectorAll('.flex.flex-wrap.gap-2 button');
+
+            dayButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Reset all styles
+                    dayButtons.forEach(b => {
+                        b.className = "px-5 py-2.5 rounded-full bg-white dark:bg-neutral-800 border-2 border-border-pink dark:border-neutral-700 text-neutral-pink font-medium text-sm hover:border-primary/50 transition-all";
+                    });
+
+                    // Set active style
+                    e.target.className = "px-5 py-2.5 rounded-full bg-primary text-white font-medium text-sm transition-all shadow-md shadow-primary/20";
+                    selectedDay = e.target.innerText;
+                });
+            });
+
+            // Save action
+            document.getElementById('saveBtn').addEventListener('click', async () => {
+                const user = JSON.parse(localStorage.getItem('user'));
+
+                const data = {
+                    user_id: user.id,
+                    course_name: document.getElementById('courseName').value,
+                    room: document.getElementById('room').value,
+                    lecturer: document.getElementById('lecturer').value,
+                    day: selectedDay,
+                    start_time: document.getElementById('startTime').value,
+                    end_time: document.getElementById('endTime').value,
+                    type: 'Wajib' // Default for now, or add a selector
+                };
+
+                try {
+                    const response = await fetch(`${CONFIG.API_BASE_URL}/api/schedules`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        alert('Jadwal berhasil disimpan!');
+                        window.location.href = '../../pages/home/index.html';
+                    } else {
+                        const err = await response.json();
+                        alert('Gagal menyimpan: ' + err.error);
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('Gagal menghubungkan ke server');
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

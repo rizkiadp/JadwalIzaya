@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Profil Saya - University Planner</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f490b1",
+                        "primary-light": "#ffb7ce",
+                        "background-light": "#fff5f8",
+                        "background-dark": "#211116",
+                        "text-main": "#4a3a3f",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.25rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft-pink': '0 10px 25px -5px rgba(244, 144, 177, 0.2)',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .pink-gradient {
+            background: linear-gradient(135deg, #f490b1 0%, #ffb7ce 100%);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 dark:bg-zinc-950 min-h-screen flex justify-center items-center">
+
+    <!-- App Container (Mobile Frame) -->
+    <div
+        class="w-full max-w-md h-[100dvh] bg-background-light dark:bg-background-dark relative shadow-2xl overflow-hidden flex flex-col">
+
+        <!-- Header -->
+        <header
+            class="px-6 pt-8 pb-4 bg-background-light/80 sticky top-0 z-20 backdrop-blur-md dark:bg-background-dark/80">
+            <div class="flex items-center justify-between mb-2">
+                <div>
+                    <h1 class="text-2xl font-bold text-text-main dark:text-primary-light">Profil Saya</h1>
+                    <p class="text-sm text-primary font-medium">Mahasiswa</p>
+                </div>
+                <button
+                    class="w-10 h-10 rounded-full bg-white dark:bg-zinc-800 flex items-center justify-center shadow-sm border border-primary/10">
+                    <span class="material-symbols-outlined text-primary text-2xl">settings</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 px-6 pb-24 flex flex-col items-center gap-6 mt-4 overflow-y-auto hide-scrollbar">
+
+            <!-- Avatar Section -->
+            <div class="relative group">
+                <div class="w-32 h-32 rounded-full p-1 pink-gradient shadow-soft-pink">
+                    <div
+                        class="w-full h-full rounded-full bg-white dark:bg-zinc-800 flex items-center justify-center border-4 border-transparent bg-clip-padding">
+                        <span class="material-symbols-outlined text-6xl text-primary/80">person</span>
+                    </div>
+                </div>
+                <button
+                    class="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-text-main text-white flex items-center justify-center shadow-lg transform transition-transform active:scale-95">
+                    <span class="material-symbols-outlined text-sm">edit</span>
+                </button>
+            </div>
+
+            <!-- User Info -->
+            <div class="text-center space-y-1">
+                <h2 id="userName" class="text-2xl font-bold text-text-main dark:text-zinc-100">Loading...</h2>
+
+            </div>
+
+
+
+            <!-- Menu List (Optional, for future features) -->
+            <div class="w-full space-y-3 mt-2">
+                <button
+                    class="w-full bg-white dark:bg-zinc-800 p-4 rounded-2xl shadow-sm border border-primary/5 flex items-center justify-between group active:scale-[0.98] transition-all">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">school</span>
+                        </div>
+                        <span class="font-bold text-text-main dark:text-zinc-200">Data Akademik</span>
+                    </div>
+                    <span
+                        class="material-symbols-outlined text-text-main/30 group-hover:text-primary transition-colors">chevron_right</span>
+                </button>
+
+                <button
+                    class="w-full bg-white dark:bg-zinc-800 p-4 rounded-2xl shadow-sm border border-primary/5 flex items-center justify-between group active:scale-[0.98] transition-all">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">notifications</span>
+                        </div>
+                        <span class="font-bold text-text-main dark:text-zinc-200">Notifikasi</span>
+                    </div>
+                    <!-- Toggle switch visuals -->
+                    <div class="w-10 h-5 bg-primary/20 rounded-full relative">
+                        <div class="absolute right-0.5 top-0.5 w-4 h-4 bg-primary rounded-full shadow-sm"></div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Logout Button -->
+            <button id="logoutBtn"
+                class="w-full mt-auto py-4 rounded-2xl border border-red-100 text-red-400 font-bold hover:bg-red-50 hover:text-red-500 transition-colors flex items-center justify-center gap-2 active:scale-[0.98]">
+                <span class="material-symbols-outlined">logout</span>
+                Keluar Aplikasi
+            </button>
+
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav
+            class="absolute bottom-0 left-0 right-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-lg border-t border-primary/10 px-6 py-3 flex items-center justify-around z-40">
+            <a class="flex flex-col items-center gap-1 group relative" href="../../pages/home/index.html">
+                <span
+                    class="material-symbols-outlined text-text-main/40 dark:text-zinc-500 group-hover:text-primary transition-colors">home</span>
+                <span
+                    class="text-[10px] font-bold text-text-main/40 dark:text-zinc-500 uppercase tracking-tighter group-hover:text-primary transition-colors">Beranda</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 group relative" href="../../pages/day-detail-v2/index.html">
+                <span
+                    class="material-symbols-outlined text-text-main/40 dark:text-zinc-500 group-hover:text-primary transition-colors">calendar_today</span>
+                <span
+                    class="text-[10px] font-bold text-text-main/40 dark:text-zinc-500 uppercase tracking-tighter group-hover:text-primary transition-colors">Jadwal</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 group" href="../../pages/todo/index.html">
+                <span
+                    class="material-symbols-outlined text-text-main/40 dark:text-zinc-500 group-hover:text-primary transition-colors">checklist</span>
+                <span
+                    class="text-[10px] font-bold text-text-main/40 dark:text-zinc-500 uppercase tracking-tighter group-hover:text-primary transition-colors">Tugas</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 group relative" href="#">
+                <div class="w-10 h-1 rounded-full bg-primary absolute -top-3 block"></div>
+                <span class="material-symbols-outlined text-primary"
+                    style="font-variation-settings: 'FILL' 1">person</span>
+                <span class="text-[10px] font-bold text-primary uppercase tracking-tighter">Profil</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                document.getElementById('userName').textContent = user.username;
+            } else {
+                // Optional: Redirect if not logged in, though usually checked on page load
+                // window.location.href = '../../pages/login/index.html'; 
+            }
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                Swal.fire({
+                    title: 'Yakin ingin keluar?',
+                    text: "Sesi anda akan berakhir disini!",
+                    icon: 'warning',
+                    width: 300,
+                    showCancelButton: true,
+                    confirmButtonColor: '#f490b1',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Keluar!',
+                    cancelButtonText: 'Batal',
+                    background: '#fff',
+                    color: '#4a3a3f',
+                    customClass: {
+                        popup: 'rounded-2xl text-sm',
+                        title: 'text-lg',
+                        confirmButton: 'rounded-xl text-sm px-4 py-2',
+                        cancelButton: 'rounded-xl text-sm px-4 py-2'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Optional: Show a quick "See you later" message and wait a bit
+                        let timerInterval
+                        Swal.fire({
+                            title: 'Sampai Jumpa!',
+                            html: 'Mengerahkan anda kembali ke login...',
+                            timer: 1500,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            },
+                            willClose: () => {
+                                localStorage.clear();
+                                window.location.href = '../../pages/login/index.html';
+                            }
+                        })
+                    }
+                })
+            });
+        });
+    </script>
+
+</body>
+
+</html>

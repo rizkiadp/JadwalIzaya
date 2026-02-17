@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Halo Mahasiswa! - Login</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#f490b1",
+            "primary-hover": "#f0719d",
+            "background-light": "#fdf8f9",
+            "background-dark": "#211116",
+            "soft-pink": "#fce4ec",
+            "border-pink": "#f8bbd0",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "2xl": "1.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .cute-pattern {
+      background-image: radial-gradient(#f490b1 0.5px, transparent 0.5px);
+      background-size: 24px 24px;
+      opacity: 0.15;
+    }
+
+    .soft-shadow {
+      box-shadow: 0 10px 25px -5px rgba(244, 144, 177, 0.3);
+    }
+
+    .btn-bounce:active {
+      transform: scale(0.96);
+    }
+  </style>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+  <!-- Subtle Background Pattern -->
+  <div class="absolute inset-0 cute-pattern pointer-events-none"></div>
+  <div class="w-full max-w-[440px] z-10">
+    <!-- Main Card Container -->
+    <div
+      class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-2xl p-8 md:p-10 border border-white dark:border-zinc-800 soft-shadow">
+      <!-- Top App Bar Style Icon -->
+      <div class="flex justify-center mb-6">
+        <div class="relative">
+          <div
+            class="w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center border-4 border-white dark:border-zinc-800">
+            <!-- Mascot Placeholder -->
+            <img alt="Adorable pink cat mascot mascot holding a pencil" class="w-24 h-24 object-contain"
+              data-alt="Adorable pink cat mascot holding a pencil"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzyQ30wCm5rKJN4LiiNJ8lEcY9pLd91lr0Th2kPj53zSUzT1HV2BS-vjIXbWat-sNbt6V0t1R6cuyyO1lHZ-8JQ_SBUVT1UJSnFelJL3rW0QQj3im5IFCVw7XnuZ4WCmoq0hzBBVyroEvlCTW-gL1QiRHobYmjPnMaZzUDYShIlCWfAyztCbC4Oke-X51IUiBEVYGpdEsfGT-9vwLnqxEEI9Hx6NtHOQF4vi4R7I03WJO0q1WctI9DlqyXXA3bRp2VhgWoTzYrrVz9" />
+          </div>
+          <div
+            class="absolute -bottom-2 -right-2 bg-primary text-white p-2 rounded-full border-4 border-white dark:border-zinc-800">
+            <span class="material-symbols-outlined text-sm">auto_awesome</span>
+          </div>
+        </div>
+      </div>
+      <!-- Header Section -->
+      <div class="text-center mb-10">
+        <h1 class="text-3xl font-extrabold text-[#211116] dark:text-pink-50 tracking-tight mb-2">Halo Izaya Cantik!</h1>
+        <p class="text-zinc-500 dark:text-zinc-400 font-medium">
+          Silakan masuk untuk cek jadwal kuliahmu yang seru! ✨
+        </p>
+      </div>
+
+      <!-- Login Form -->
+      <form class="space-y-5" id="loginForm">
+        <!-- Username Field -->
+        <div>
+          <label class="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2 ml-1">Username</label>
+          <div class="relative flex items-center">
+            <div class="absolute left-4 text-primary">
+              <span class="material-symbols-outlined">person</span>
+            </div>
+            <input id="username"
+              class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-border-pink/50 bg-white/50 dark:bg-zinc-800/50 focus:border-primary focus:ring-0 transition-all placeholder:text-zinc-400 text-zinc-800 dark:text-white font-medium"
+              placeholder="Masukkan username kamu" type="text" required />
+          </div>
+        </div>
+        <!-- Password Field -->
+        <div>
+          <div class="flex justify-between items-center mb-2 ml-1">
+            <label class="text-sm font-bold text-zinc-700 dark:text-zinc-300">Password</label>
+            <a class="text-xs font-bold text-primary hover:text-primary-hover transition-colors" href="#">Lupa
+              Password?</a>
+          </div>
+          <div class="relative flex items-center">
+            <div class="absolute left-4 text-primary">
+              <span class="material-symbols-outlined">lock</span>
+            </div>
+            <input id="password"
+              class="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-border-pink/50 bg-white/50 dark:bg-zinc-800/50 focus:border-primary focus:ring-0 transition-all placeholder:text-zinc-400 text-zinc-800 dark:text-white font-medium"
+              placeholder="Masukkan password rahasiamu" type="password" required />
+            <button class="absolute right-4 text-zinc-400 hover:text-primary transition-colors" type="button">
+              <span class="material-symbols-outlined">visibility_off</span>
+            </button>
+          </div>
+        </div>
+        <!-- Remember Me -->
+        <div class="flex items-center px-1">
+          <input class="w-5 h-5 rounded border-border-pink text-primary focus:ring-primary/20" id="remember"
+            type="checkbox" />
+          <label class="ml-2 text-sm font-medium text-zinc-600 dark:text-zinc-400" for="remember">Ingat Saya</label>
+        </div>
+        <!-- Submit Button -->
+        <button
+          class="btn-bounce w-full py-4 px-6 rounded-xl bg-gradient-to-r from-[#f490b1] to-[#f8bbd0] text-white font-bold text-lg shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all transform flex items-center justify-center gap-2"
+          type="submit">
+          Masuk Sekarang
+          <span class="material-symbols-outlined">rocket_launch</span>
+        </button>
+      </form>
+
+      <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const username = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
+
+          try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/api/auth/login`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username, password })
+            });
+
+
+            const data = await response.json();
+
+            if (response.ok) {
+              // Save user info
+              localStorage.setItem('token', data.token);
+              localStorage.setItem('user', JSON.stringify(data.user));
+
+              // Redirect to home (assuming relative path is correct)
+              window.location.href = '../../pages/home/index.html';
+            } else {
+              alert(data.error || 'Login failed');
+            }
+          } catch (err) {
+            console.error(err);
+            alert('Failed to connect to server');
+          }
+        });
+      </script>
+
+      <!-- Footer Section -->
+
+    </div>
+    <!-- Decorative elements outside the card -->
+    <div class="mt-8 flex justify-center gap-8 opacity-40">
+      <span class="material-symbols-outlined text-primary text-3xl">star</span>
+      <span class="material-symbols-outlined text-primary text-3xl">favorite</span>
+      <span class="material-symbols-outlined text-primary text-3xl">school</span>
+    </div>
+    <div
+      class="fixed top-20 -left-10 w-40 h-40 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob">
+    </div>
+    <div
+      class="fixed top-20 -right-10 w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000">
+    </div>
+    <div
+      class="fixed -bottom-8 left-20 w-40 h-40 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../config.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Dark mode toggle logic
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const htmlElement = document.documentElement;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          htmlElement.classList.add('dark');
+          if (darkModeToggle) darkModeToggle.checked = true;
+        }
+
+        if (darkModeToggle) {
+          darkModeToggle.addEventListener('change', () => {
+            if (darkModeToggle.checked) {
+              htmlElement.classList.add('dark');
+              localStorage.setItem('theme', 'dark');
+            } else {
+              htmlElement.classList.remove('dark');
+              localStorage.setItem('theme', 'light');
+            }
+          });
+        }
+
+        // Password visibility toggle
+        const passwordInput = document.getElementById('password');
+        const togglePasswordButton = passwordInput ? passwordInput.nextElementSibling : null;
+
+        if (togglePasswordButton) {
+          togglePasswordButton.addEventListener('click', () => {
+            const icon = togglePasswordButton.querySelector('.material-symbols-outlined');
+            if (passwordInput.type === 'password') {
+              passwordInput.type = 'text';
+              icon.textContent = 'visibility';
+            } else {
+              passwordInput.type = 'password';
+              icon.textContent = 'visibility_off';
+            }
+          });
+        }
+      });
+    </script>
+  </div>
+  <!-- Floating Background Decor -->
+  <div class="absolute top-20 left-10 w-16 h-16 bg-primary/10 rounded-full blur-xl hidden md:block"></div>
+  <div class="absolute bottom-20 right-10 w-24 h-24 bg-primary/10 rounded-full blur-xl hidden md:block"></div>
+</body>
+
+</html>
